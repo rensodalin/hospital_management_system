@@ -1,0 +1,12 @@
+name: hospital_management_system
+description: A console-based Hospital Management System built with Dart
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  test: ^1.26.3
+
+dev_dependencies:
+  lints: ^3.0.0
