@@ -59,14 +59,14 @@ class Appointment {
 
   @override
   String toString() => '''
-Appointment Details:
-ID: $id
-Patient ID: $patientId
-Doctor ID: $doctorId
-Date & Time: ${dateTime.toLocal()}
-Status: ${status.toString().split('.').last}
-Reason: $reason
-${diagnosis != null ? 'Diagnosis: $diagnosis' : ''}
-${prescription != null ? 'Prescription: $prescription' : ''}
-''';
-}
+    Appointment Details:
+    ID: $id
+    Patient ID: $patientId
+    Doctor ID: $doctorId
+    Date & Time: ${dateTime.toLocal()}
+    Status: ${status.toString().split('.').last}
+    Reason: $reason
+    ${diagnosis != null ? 'Diagnosis: $diagnosis' : ''}
+    ${prescription != null ? 'Prescription: $prescription' : ''}
+    ''';
+    }

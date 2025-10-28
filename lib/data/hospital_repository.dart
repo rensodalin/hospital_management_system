@@ -7,6 +7,7 @@ import '../domain/appointment.dart';
 import '../domain/enums.dart';
 
 class HospitalRepository {
+  final bool useStorage;
   final List<Doctor> _doctors = [];
   final List<Patient> _patients = [];
   final List<Appointment> _appointments = [];
@@ -17,15 +18,17 @@ class HospitalRepository {
   final String _patientsFile = 'data/patients.json';
   final String _appointmentsFile = 'data/appointments.json';
 
-  HospitalRepository() {
-    // ensure data directory exists and load any saved data
-    if (!_dataDir.existsSync()) {
-      _dataDir.createSync(recursive: true);
-    }
-    try {
-      loadAll();
-    } catch (e) {
-      // ignore load errors for demo
+  HospitalRepository({this.useStorage = true}) {
+    if (useStorage) {
+      // ensure data directory exists and load saved data
+      if (!_dataDir.existsSync()) {
+        _dataDir.createSync(recursive: true);
+      }
+      try {
+        loadAll();
+      } catch (e) {
+        // ignore load errors for demo
+      }
     }
   }
 
@@ -52,8 +55,7 @@ class HospitalRepository {
         (a) => a.doctorId == id && a.status != AppointmentStatus.completed)) {
       throw Exception('Cannot remove doctor with pending appointments');
     }
-    final doctorExists = _doctors.any((d) => d.id == id);
-    if (!doctorExists) {
+    if (!_doctors.any((d) => d.id == id)) {
       throw Exception('Doctor with ID $id not found');
     }
     _doctors.removeWhere((d) => d.id == id);
@@ -63,7 +65,7 @@ class HospitalRepository {
   Doctor? getDoctorById(String id) {
     try {
       return _doctors.firstWhere((d) => d.id == id);
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
@@ -71,8 +73,7 @@ class HospitalRepository {
   List<Doctor> getAllDoctors() => List.unmodifiable(_doctors);
 
   List<Doctor> getDoctorsBySpecialization(DoctorSpecialization spec) =>
-      List.unmodifiable(
-          _doctors.where((d) => d.specialization == spec).toList());
+      List.unmodifiable(_doctors.where((d) => d.specialization == spec));
 
   // --- Patient Operations ---
   void addPatient(Patient patient) {
@@ -97,8 +98,7 @@ class HospitalRepository {
         (a) => a.patientId == id && a.status != AppointmentStatus.completed)) {
       throw Exception('Cannot remove patient with pending appointments');
     }
-    final patientExists = _patients.any((p) => p.id == id);
-    if (!patientExists) {
+    if (!_patients.any((p) => p.id == id)) {
       throw Exception('Patient with ID $id not found');
     }
     _patients.removeWhere((p) => p.id == id);
@@ -108,7 +108,7 @@ class HospitalRepository {
   Patient? getPatientById(String id) {
     try {
       return _patients.firstWhere((p) => p.id == id);
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
@@ -117,35 +117,29 @@ class HospitalRepository {
 
   // --- Appointment Operations ---
   void addAppointment(Appointment appointment) {
-    // Validate IDs
     if (_appointments.any((a) => a.id == appointment.id)) {
       throw Exception('Appointment with ID ${appointment.id} already exists');
     }
     final doctor = getDoctorById(appointment.doctorId);
-    if (doctor == null) {
-      throw Exception('Doctor not found');
-    }
+    if (doctor == null) throw Exception('Doctor not found');
     if (getPatientById(appointment.patientId) == null) {
       throw Exception('Patient not found');
     }
-
-    // Validate appointment time
     if (appointment.dateTime.isBefore(DateTime.now())) {
       throw Exception('Cannot schedule appointments in the past');
     }
 
-    // Check doctor availability (normalize to 3-letter lowercase codes)
-    final appointmentDay = appointment.dateTime.weekday;
-    final req = _weekdayToCode(appointmentDay);
-    final normalizedDays = doctor.availableDays
+    // Check doctor availability
+    final reqDay = _weekdayToCode(appointment.dateTime.weekday);
+    final doctorDays = doctor.availableDays
         .map((d) => d.toString().substring(0, 3).toLowerCase())
         .toList();
-    if (!normalizedDays.contains(req)) {
+    if (!doctorDays.contains(reqDay)) {
       throw Exception(
-          'Doctor is not available on ${_weekdayToString(appointmentDay)}');
+          'Doctor is not available on ${_weekdayToString(appointment.dateTime.weekday)}');
     }
 
-    // Check for conflicting appointments
+    // Check for conflicts
     if (_hasConflictingAppointment(appointment)) {
       throw Exception('Doctor has a conflicting appointment at this time');
     }
@@ -164,7 +158,7 @@ class HospitalRepository {
       final newStart = newAppointment.dateTime;
       final newEnd = newStart.add(const Duration(minutes: 30));
 
-      return (newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart));
+      return newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart);
     });
   }
 
@@ -182,7 +176,6 @@ class HospitalRepository {
   }
 
   String _weekdayToCode(int weekday) {
-    // returns 'mon', 'tue', etc.
     const codes = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
     return codes[weekday - 1];
   }
@@ -190,7 +183,7 @@ class HospitalRepository {
   Appointment? getAppointmentById(String id) {
     try {
       return _appointments.firstWhere((a) => a.id == id);
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
@@ -198,35 +191,29 @@ class HospitalRepository {
   List<Appointment> getAllAppointments() => List.unmodifiable(_appointments);
 
   List<Appointment> getAppointmentsByDoctor(String doctorId) =>
-      List.unmodifiable(
-          _appointments.where((a) => a.doctorId == doctorId).toList());
+      List.unmodifiable(_appointments.where((a) => a.doctorId == doctorId));
 
   List<Appointment> getAppointmentsByPatient(String patientId) =>
-      List.unmodifiable(
-          _appointments.where((a) => a.patientId == patientId).toList());
+      List.unmodifiable(_appointments.where((a) => a.patientId == patientId));
 
   List<Appointment> getAppointmentsByDate(DateTime date) =>
-      List.unmodifiable(_appointments
-          .where((a) =>
-              a.dateTime.year == date.year &&
-              a.dateTime.month == date.month &&
-              a.dateTime.day == date.day)
-          .toList());
+      List.unmodifiable(_appointments.where((a) =>
+          a.dateTime.year == date.year &&
+          a.dateTime.month == date.month &&
+          a.dateTime.day == date.day));
 
   List<Appointment> getAppointmentsByStatus(AppointmentStatus status) =>
-      List.unmodifiable(
-          _appointments.where((a) => a.status == status).toList());
+      List.unmodifiable(_appointments.where((a) => a.status == status));
 
   void updateAppointmentStatus(String id, AppointmentStatus newStatus) {
     final appointment = getAppointmentById(id);
     if (appointment == null) throw Exception('Appointment not found');
 
-    // Validate status transitions
     switch (appointment.status) {
       case AppointmentStatus.cancelled:
-        throw Exception('Cannot update status of cancelled appointment');
       case AppointmentStatus.completed:
-        throw Exception('Cannot update status of completed appointment');
+        throw Exception(
+            'Cannot update status of ${appointment.status.toString()} appointment');
       case AppointmentStatus.scheduled:
         if (newStatus == AppointmentStatus.completed) {
           throw Exception('Appointment must be in progress before completing');
@@ -256,18 +243,21 @@ class HospitalRepository {
     saveAppointments();
   }
 
-  // --- Persistence: save/load ---
+  // --- Persistence ---
   void saveDoctors() {
+    if (!useStorage) return;
     final list = _doctors.map((d) => d.toJson()).toList();
     File(_doctorsFile).writeAsStringSync(jsonEncode(list));
   }
 
   void savePatients() {
+    if (!useStorage) return;
     final list = _patients.map((p) => p.toJson()).toList();
     File(_patientsFile).writeAsStringSync(jsonEncode(list));
   }
 
   void saveAppointments() {
+    if (!useStorage) return;
     final list = _appointments.map((a) => a.toJson()).toList();
     File(_appointmentsFile).writeAsStringSync(jsonEncode(list));
   }
@@ -279,38 +269,44 @@ class HospitalRepository {
   }
 
   void loadAll() {
-    // doctors
+    if (!useStorage) return;
+
+    // Doctors
     final dfile = File(_doctorsFile);
     if (dfile.existsSync()) {
-      final content = dfile.readAsStringSync();
-      final list = jsonDecode(content) as List<dynamic>;
+      final list = jsonDecode(dfile.readAsStringSync()) as List<dynamic>;
       _doctors.clear();
-      for (final item in list) {
+      for (var item in list) {
         _doctors.add(Doctor.fromJson(item as Map<String, dynamic>));
       }
     }
 
-    // patients
+    // Patients
     final pfile = File(_patientsFile);
     if (pfile.existsSync()) {
-      final content = pfile.readAsStringSync();
-      final list = jsonDecode(content) as List<dynamic>;
+      final list = jsonDecode(pfile.readAsStringSync()) as List<dynamic>;
       _patients.clear();
-      for (final item in list) {
+      for (var item in list) {
         _patients.add(Patient.fromJson(item as Map<String, dynamic>));
       }
     }
 
-    // appointments
+    // Appointments
     final afile = File(_appointmentsFile);
     if (afile.existsSync()) {
-      final content = afile.readAsStringSync();
-      final list = jsonDecode(content) as List<dynamic>;
+      final list = jsonDecode(afile.readAsStringSync()) as List<dynamic>;
       _appointments.clear();
-      for (final item in list) {
+      for (var item in list) {
         _appointments.add(Appointment.fromJson(item as Map<String, dynamic>));
       }
     }
+  }
+
+  // --- Utility ---
+  void clearAll() {
+    _doctors.clear();
+    _patients.clear();
+    _appointments.clear();
   }
 
   // --- Statistics ---

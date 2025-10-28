@@ -5,6 +5,14 @@ import '../lib/domain/patient.dart';
 import '../lib/domain/appointment.dart';
 import '../lib/domain/enums.dart';
 
+// @dart=2.9
+import 'package:test/test.dart';
+import '../lib/data/hospital_repository.dart';
+import '../lib/domain/doctor.dart';
+import '../lib/domain/patient.dart';
+import '../lib/domain/appointment.dart';
+import '../lib/domain/enums.dart';
+
 void main() {
   group('Hospital Management System Tests', () {
     late HospitalRepository repo;
@@ -12,13 +20,7 @@ void main() {
     late Patient testPatient;
 
     setUp(() {
-      // Prevent repository from touching real JSON files
-      repo = HospitalRepository(useStorage: false);
-
-      // Clear all data (extra safety)
-      repo.clearAll();
-
-      // Create test doctor
+      repo = HospitalRepository();
       testDoctor = Doctor(
         id: 'D001',
         name: 'Dr. Test',
@@ -28,10 +30,8 @@ void main() {
         specialization: DoctorSpecialization.generalMedicine,
         qualifications: ['MD'],
         consultationFee: 100.0,
-        availableDays:['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        availableDays: ['Monday'],
       );
-
-      // Create test patient
       testPatient = Patient(
         id: 'P001',
         name: 'Patient Test',
@@ -43,7 +43,6 @@ void main() {
         medicalHistory: [],
       );
 
-      // Add doctor and patient to repository
       repo.addDoctor(testDoctor);
       repo.addPatient(testPatient);
     });
@@ -53,12 +52,11 @@ void main() {
         id: 'A001',
         patientId: testPatient.id,
         doctorId: testDoctor.id,
-        dateTime: DateTime.now().add(Duration(hours: 1)), // must be future
+        dateTime: DateTime.now(),
         reason: 'Test Appointment',
       );
 
       repo.addAppointment(appointment);
-
       expect(repo.getAllAppointments().length, equals(1));
       expect(repo.getAllAppointments().first.status,
           equals(AppointmentStatus.scheduled));
@@ -69,19 +67,17 @@ void main() {
         id: 'A002',
         patientId: testPatient.id,
         doctorId: testDoctor.id,
-        dateTime: DateTime.now().add(Duration(hours: 1)),
+        dateTime: DateTime.now(),
         reason: 'Status Test',
       );
 
       repo.addAppointment(appointment);
       final storedAppointment = repo.getAllAppointments().first;
 
-      // Update status to inProgress
       storedAppointment.status = AppointmentStatus.inProgress;
       expect(repo.getAllAppointments().first.status,
           equals(AppointmentStatus.inProgress));
 
-      // Update status to completed
       storedAppointment.status = AppointmentStatus.completed;
       expect(repo.getAllAppointments().first.status,
           equals(AppointmentStatus.completed));
@@ -92,7 +88,7 @@ void main() {
         id: 'A003',
         patientId: testPatient.id,
         doctorId: testDoctor.id,
-        dateTime: DateTime.now().add(Duration(hours: 1)),
+        dateTime: DateTime.now(),
         reason: 'Update Test',
       );
 
@@ -112,20 +108,19 @@ void main() {
         id: 'A004',
         patientId: testPatient.id,
         doctorId: testDoctor.id,
-        dateTime: DateTime.now().add(Duration(hours: 1)),
+        dateTime: DateTime.now(),
         reason: 'First Appointment',
       );
 
       final appointment2 = Appointment(
-        id: 'A004', // Duplicate ID
+        id: 'A004', // Same ID
         patientId: testPatient.id,
         doctorId: testDoctor.id,
-        dateTime: DateTime.now().add(Duration(hours: 2)),
+        dateTime: DateTime.now(),
         reason: 'Second Appointment',
       );
 
       repo.addAppointment(appointment1);
-
       expect(
         () => repo.addAppointment(appointment2),
         throwsException,
