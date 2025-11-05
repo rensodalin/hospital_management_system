@@ -1,0 +1,25 @@
+{
+  "medicalRecords": [
+    {
+      "id": "MR001",
+      "date": "2024-07-10T00:00:00.000",
+      "diagnosis": "Seasonal flu",
+      "prescriptions": "Paracetamol, Vitamin C",
+      "notes": "Recommended hydration."
+    },
+    {
+      "id": "MR003",
+      "date": "2024-09-05T00:00:00.000",
+      "diagnosis": "Viral fever",
+      "prescriptions": "Fever reducer, Electrolytes",
+      "notes": "Monitor temperature daily."
+    },
+    {
+      "id": "MR002",
+      "date": "2025-11-05T00:00:00.000",
+      "diagnosis": "Test",
+      "prescriptions": "Test",
+      "notes": "Test"
+    }
+  ]
+}

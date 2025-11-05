@@ -1,9 +1,9 @@
-abstract class Person {
+class Person {
   final String id;
-  final String name;
-  final int age;
-  final String gender;
-  final String phone;
+  String name;
+  int age;
+  String gender;
+  String phone;
 
   Person({
     required this.id,
@@ -12,10 +12,4 @@ abstract class Person {
     required this.gender,
     required this.phone,
   });
-
-  Map<String, dynamic> toJson();
-
-  @override
-  String toString() =>
-      'ID: $id, Name: $name, Age: $age, Gender: $gender, Phone: $phone';
 }

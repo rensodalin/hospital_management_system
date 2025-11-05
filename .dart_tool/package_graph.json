@@ -6,17 +6,10 @@
     {
       "name": "hospital_management_system",
       "version": "1.0.0",
-      "dependencies": [
-        "test"
-      ],
+      "dependencies": [],
       "devDependencies": [
-        "lints"
+        "test"
       ]
-    },
-    {
-      "name": "lints",
-      "version": "3.0.0",
-      "dependencies": []
     },
     {
       "name": "test",

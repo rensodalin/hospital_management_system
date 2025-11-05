@@ -1,0 +1,25 @@
+{
+  "appointments": [
+    {
+      "id": "A001",
+      "medicalRecordId": "MR001",
+      "schedule": "2024-07-10T09:30:00.000",
+      "reason": "General health checkup",
+      "status": "completed"
+    },
+    {
+      "id": "A002",
+      "medicalRecordId": "MR002",
+      "schedule": "2024-08-20T14:00:00.000",
+      "reason": "Back pain",
+      "status": "Completed"
+    },
+    {
+      "id": "A003",
+      "medicalRecordId": "MR003",
+      "schedule": "2024-09-05T11:30:00.000",
+      "reason": "High fever",
+      "status": "completed"
+    }
+  ]
+}
