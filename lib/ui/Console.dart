@@ -342,8 +342,8 @@ class Console{
             print("1. Create Appointment");
             print("2. Remove Appointment");
             print("3. Update Appointment schedule");
-            print("4. Get appointment by Patient Id");
-            print("5. Get appointment by Date");
+            print("4. View appointment by Patient Id");
+            print("5. View appointment by Date");
             print("6. Search Appointment");
             print("7. Back");
             stdout.write('Enter your choice: ');
@@ -367,7 +367,7 @@ class Console{
             print("2. Update Medical Record");
             print("3. Remove Medical Record");
             print("4. Search Medical Record");
-            print("5. Get medical record by patient");
+            print("5. View medical record by patient");
             print("6. Back");
             stdout.write('Enter your choice: ');
             int choice = int.parse(stdin.readLineSync()!);
