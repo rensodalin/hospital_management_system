@@ -8,8 +8,8 @@ main() {
   late Service service;
   setUp(() {
     List<Patient> patients = [
-      Patient(id: 'P001', name: 'John Doe', age: 25, gender: 'male', phone: '1234567890', address: '123 Main St', bloodGroup: 'A+', status: 'active',appointments: ['A001', 'A002'], registrationDate: DateTime(2025, 1, 1)),
-      Patient(id: 'P002', name: 'Jane Smith', age: 30, gender: 'female', phone: '0987654321', address: '456 Maple Ave', bloodGroup: 'B+', status: 'active',appointments: ['A003'], registrationDate: DateTime(2025, 2, 15))
+      Patient(id: 'P001', name: 'John Doe', age: 25, gender: 'male', phone: '1234567890', address: '123 Main St', bloodGroup: 'A+',appointments: ['A001', 'A002'], registrationDate: DateTime(2025, 1, 1)),
+      Patient(id: 'P002', name: 'Jane Smith', age: 30, gender: 'female', phone: '0987654321', address: '456 Maple Ave', bloodGroup: 'B+',appointments: ['A003'], registrationDate: DateTime(2025, 2, 15))
     ];
     
     List<Appointment> appointments = [
@@ -26,9 +26,11 @@ main() {
 
     service = Service(patients: patients, appointments: appointments, medicalRecords: medicalRecords);
   });
+
+  
 // Case: 1
   test('Test create patient', () {
-    Patient patient = Patient(id: 'P004',name: 'Leng Menghan',age: 20,gender: 'male',phone: '1234567890',address: '123 Main St',bloodGroup: 'A+',status: 'active',registrationDate: DateTime.now(),);
+    Patient patient = Patient(id: 'P004',name: 'Leng Menghan',age: 20,gender: 'male',phone: '1234567890',address: '123 Main St',bloodGroup: 'A+', registrationDate: DateTime.now(),);
     service.addPatient(patient);
     expect(service.patients.length, equals(3));
   });

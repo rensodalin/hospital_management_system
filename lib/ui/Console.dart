@@ -7,6 +7,7 @@ class Console{
   Service service;
 
   Console({required this.service});
+
 // MEdicalRecord
   void createMedicalRecord(){
     stdout.write("Enter appointment id: ");
@@ -22,15 +23,14 @@ class Console{
       return;
     }
 
-    stdout.write("Enter date: ");
-    DateTime date = DateTime.parse(stdin.readLineSync()!);
     stdout.write("Enter diagnosis: ");
     String diagnosis = stdin.readLineSync()!;
     stdout.write("Enter prescription: ");
     String prescription = stdin.readLineSync()!;
     stdout.write("Enter notes: ");
     String notes = stdin.readLineSync()!;
-    service.createMedicalRecord(appointmentId, MedicalRecord(id: MedicalRecordId, date: date, diagnosis: diagnosis, prescriptions:prescription, notes:notes));
+    service.createMedicalRecord(appointmentId, MedicalRecord(id: MedicalRecordId, date: DateTime.now(), diagnosis: diagnosis, prescriptions:prescription, notes:notes));
+    print("MedicalRecord created successfully\n");
   }
 
   void updateMedicalRecord(){
@@ -47,6 +47,7 @@ class Console{
     stdout.write("Enter notes: ");
     String notes = stdin.readLineSync()!;
     service.updateMedicalRecord(id, diagnosis, prescription, notes);
+    print("MedicalRecord updated successfully\n");
   }
 
   void removeMedicalRecord(){
@@ -57,6 +58,7 @@ class Console{
       return;
     }
     service.removeMedicalRecord(id);
+    print("MedicalRecord removed successfully\n");
   }
 
   void searchMedicalRecord(){
@@ -84,6 +86,7 @@ class Console{
     }
 
     List<MedicalRecord> medicalRecords = service.getMedicalRecordsByPatient(id);
+    print("-"* 100);
     for(MedicalRecord m in medicalRecords){
       print("ID: ${m.id}");
       print("Date : ${m.date}");
@@ -93,6 +96,7 @@ class Console{
       print("-"* 100);
     }
   }
+
 // Appointment
   void createAppointment(){
     stdout.write('Enter patient id: ');
@@ -108,12 +112,13 @@ class Console{
       print("Appointment with this id: ${appointmentId} already exist");
       return;
     };
-    stdout.write("Enter schedule dateTime: "); 
-    DateTime scheduleDate = DateTime.parse(stdin.readLineSync()!);;
+    stdout.write("Enter schedule dateTime (yyyy-MM-dd HH:mm): "); 
+    DateTime scheduleDate = DateTime.parse(stdin.readLineSync()!);
     stdout.write("Enter reason: ");
     String reason = stdin.readLineSync()!;
 
     service.createAppointment(id, Appointment(id: appointmentId, schedule: scheduleDate, reason: reason));
+    print("Appointment created successfully\n");
   }
 
   void updateAppointmentSchedule(){
@@ -127,6 +132,7 @@ class Console{
     stdout.write("Enter schedule dateTime: "); 
     DateTime newDate = DateTime.parse(stdin.readLineSync()!);
     service.updateAppointmentSchedule(id, newDate);
+    print("Appointment's schedule updated successfully\n");
   }
 
   void removeAppointment(){
@@ -137,6 +143,7 @@ class Console{
       return;
     };
     service.removeAppointment(id);
+    print("Appointment removed successfully\n");
   }
 
   void getAppointmentsByPatient(){
@@ -187,6 +194,7 @@ class Console{
         "${a.status.toString().padRight(12)}"
   );
   }
+
 // Patient
   void printPatientInfo(Patient patient) {
     print(
@@ -197,7 +205,6 @@ class Console{
         "${patient.phone.padRight(15)}"
         "${patient.address.padRight(20)}"
         "${patient.bloodGroup.padRight(14)}"
-        "${patient.status.toString().padRight(12)}"
         "${patient.registrationDate.toString().padRight(25)}"
     );
   } //Ai generate
@@ -211,13 +218,12 @@ class Console{
         "Phone".padRight(15) +
         "Address".padRight(20) +
         "Blood Group".padRight(14) +
-        "Status".padRight(12) +
         "Registration Date".padRight(25)
     );
     print("-" * 128);
     service.patients.forEach((patient) => printPatientInfo(patient));
+    print("-" * 128);
   }// AI generate
-
 
   void searchPatient(){
     stdout.write('Enter patient id: ');
@@ -239,7 +245,7 @@ class Console{
     );
     print("-" * 128);
     printPatientInfo(service.searchPatient(id));
-
+    print("-" * 128);
   }
 
   void addPatients(){
@@ -253,7 +259,7 @@ class Console{
     String name = stdin.readLineSync()!;
     stdout.write('Enter patient age: ');
     int age = int.parse(stdin.readLineSync()!);
-    stdout.write('Enter patient gender: ');
+    stdout.write('Enter patient gender (Male/Female): ');
     String gender = stdin.readLineSync()!;
     stdout.write('Enter patient phone: ');
     String phone = stdin.readLineSync()!;
@@ -261,10 +267,9 @@ class Console{
     String address = stdin.readLineSync()!;
     stdout.write('Enter patient blood group: ');
     String bloodGroup = stdin.readLineSync()!;
-    stdout.write('Enter patient status: ');
-    String status = stdin.readLineSync()!;
-    Patient patient = Patient(id: id, name: name, age: age, gender: gender, phone: phone, address: address, bloodGroup: bloodGroup, status: status, registrationDate: DateTime.now());
+    Patient patient = Patient(id: id, name: name, age: age, gender: gender, phone: phone, address: address, bloodGroup: bloodGroup, registrationDate: DateTime.now());
     service.addPatient(patient);
+    print("Patient added successfully\n");
     }
 
   void removePatient(){
@@ -275,6 +280,7 @@ class Console{
       return;
     }
     service.removePatient(id);
+    print("Patient removed successfully\n");
   }
 
   void updatePatient(){
@@ -296,9 +302,8 @@ class Console{
     String address = stdin.readLineSync()!;
     stdout.write('Enter patient blood group: ');
     String bloodGroup = stdin.readLineSync()!;
-    stdout.write('Enter patient status: ');
-    String status = stdin.readLineSync()!;
-    service.updatePatient(id, name, age, gender, phone, address, bloodGroup, status);
+    service.updatePatient(id, name, age, gender, phone, address, bloodGroup);
+    print("Patient updated successfully\n");
   }
 
   void startSystem(){

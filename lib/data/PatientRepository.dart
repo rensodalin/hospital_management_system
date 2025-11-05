@@ -22,7 +22,6 @@ class PatientRepository {
         phone: p['phone'],
         address: p['address'],
         bloodGroup: p['bloodGroup'],
-        status: p['status'],
         appointments: List<String>.from(p['appointments']),
         registrationDate: DateTime.parse(p['registrationDate']),
       );
@@ -41,7 +40,6 @@ class PatientRepository {
               'phone': p.phone,
               'address': p.address,
               'bloodGroup': p.bloodGroup,
-              'status': p.status,
               'appointments': p.appointments,
               'registrationDate': p.registrationDate.toIso8601String(),
             })

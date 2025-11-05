@@ -8,10 +8,10 @@
       "phone": "016556528",
       "address": "KD",
       "bloodGroup": "O",
-      "status": "Active",
       "appointments": [
         "A001",
-        "A002"
+        "A002",
+        "A005"
       ],
       "registrationDate": "2025-11-04T21:40:47.812363"
     },
@@ -23,11 +23,21 @@
       "phone": "1234567",
       "address": "SR",
       "bloodGroup": "A",
-      "status": "Active",
       "appointments": [
         "A003"
       ],
       "registrationDate": "2025-11-05T21:14:28.500762"
+    },
+    {
+      "id": "P003",
+      "name": "Testing",
+      "age": 12,
+      "gender": "Male",
+      "phone": "123",
+      "address": "PP",
+      "bloodGroup": "O",
+      "appointments": [],
+      "registrationDate": "2025-11-05T22:15:47.619939"
     }
   ]
 }

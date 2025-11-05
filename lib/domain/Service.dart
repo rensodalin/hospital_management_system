@@ -111,7 +111,7 @@ class Service {
     patients.remove(p);
   }
 
-  void updatePatient(String id, String name, int age, String gender, String phone, String address, String bloodGroup, String status) {
+  void updatePatient(String id, String name, int age, String gender, String phone, String address, String bloodGroup) {
     Patient p = patients.firstWhere((p) => p.id == id);
     p.name = name;
     p.age = age;
@@ -119,6 +119,5 @@ class Service {
     p.phone = phone;
     p.address = address;
     p.bloodGroup = bloodGroup;
-    p.status = status;
   }
 }
