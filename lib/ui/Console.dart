@@ -1,14 +1,14 @@
 import '../domain/Service.dart';
 import 'dart:io';
-import '../domain/Patient.dart';
-import '../domain/Appointment.dart';
-import '../domain/MedicalRecord.dart';
+import '../domain/Models/patient.dart';
+import '../domain/Models/appointment.dart';
+import '../domain/Models/MedicalRecord.dart';
 class Console{
   Service service;
 
   Console({required this.service});
 
-// MEdicalRecord
+// MedicalRecord
   void createMedicalRecord(){
     stdout.write("Enter appointment id: ");
     String appointmentId = stdin.readLineSync()!;
@@ -205,9 +205,9 @@ class Console{
         "${patient.phone.padRight(15)}"
         "${patient.address.padRight(20)}"
         "${patient.bloodGroup.padRight(14)}"
-        "${patient.registrationDate.toString().padRight(25)}"
+        "${patient.registrationDate.toString().padRight(25)}" // Line 201-208 AI generate
     );
-  } //Ai generate
+  }
 
   void viewAllPatient() {
     print(
@@ -218,12 +218,12 @@ class Console{
         "Phone".padRight(15) +
         "Address".padRight(20) +
         "Blood Group".padRight(14) +
-        "Registration Date".padRight(25)
+        "Registration Date".padRight(25)  
     );
     print("-" * 128);
     service.patients.forEach((patient) => printPatientInfo(patient));
     print("-" * 128);
-  }// AI generate
+  }
 
   void searchPatient(){
     stdout.write('Enter patient id: ');
@@ -306,6 +306,7 @@ class Console{
     print("Patient updated successfully\n");
   }
 
+// System control
   void startSystem(){
     while(true){
       print("1. Manage Patient");

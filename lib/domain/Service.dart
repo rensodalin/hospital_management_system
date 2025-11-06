@@ -1,6 +1,6 @@
-import 'Patient.dart';
-import 'Appointment.dart';
-import 'MedicalRecord.dart';
+import './Models/patient.dart';
+import './Models/appointment.dart';
+import './Models/MedicalRecord.dart';
 
 class Service {
   List<Patient> patients;
@@ -57,6 +57,7 @@ class Service {
     return result;
   }
 
+
 // Appointment
   void createAppointment(String patientId, Appointment newAppointment) {
     appointments.add(newAppointment);
@@ -93,6 +94,8 @@ class Service {
   }
 
   Appointment searchAppointment(String id) => appointments.firstWhere((a) => a.id == id);
+
+
 
 // Patient
   Patient searchPatient(String id) => patients.firstWhere((p) => p.id == id);

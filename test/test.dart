@@ -1,8 +1,8 @@
-import 'package:hospital_management_system/domain/Appointment.dart';
-import 'package:hospital_management_system/domain/MedicalRecord.dart';
+import 'package:hospital_management_system/domain/Models/appointment.dart';
+import 'package:hospital_management_system/domain/Models/MedicalRecord.dart';
+import 'package:hospital_management_system/domain/Models/patient.dart';
 import 'package:test/test.dart';
 import 'package:hospital_management_system/domain/Service.dart';
-import 'package:hospital_management_system/domain/Patient.dart';
 
 main() {
   late Service service;

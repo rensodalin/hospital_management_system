@@ -1,26 +1,29 @@
 import './ui/Console.dart';
 import 'domain/Service.dart';
-import './data/PatientRepository.dart';
-import './data/AppointmentRepository.dart';
-import './data/MedicalRecordRepository.dart';
-import './domain/Patient.dart';
-import './domain/Appointment.dart';
-import './domain/MedicalRecord.dart';
+import 'data/Repositories/PatientRepository.dart';
+import 'data/Repositories/AppointmentRepository.dart';
+import 'data/Repositories/MedicalRecordRepository.dart';
+import './domain/Models/patient.dart';
+import './domain/Models/appointment.dart';
+import './domain/Models/MedicalRecord.dart';
 void main() {
-  PatientRepository patientrepository = PatientRepository(filePath: '../assets/patient.json');
-  AppointmentRepository appointmentrepository = AppointmentRepository(filePath: '../assets/appointment.json');
-  MedicalRecordRepository medicalrecordrepository = MedicalRecordRepository(filePath: '../assets/medicalrecord.json');
+  PatientRepository patientrepository = PatientRepository(filePath: './data/Storage/Patient.json');
+  AppointmentRepository appointmentrepository = AppointmentRepository(filePath: './data/Storage/Appointment.json');
+  MedicalRecordRepository medicalrecordrepository = MedicalRecordRepository(filePath: './data/Storage/MedicalRecord.json');
+
   List<Patient> patients = patientrepository.readPatient();
   List<Appointment> appointments = appointmentrepository.readAppointment();
   List<MedicalRecord> medicalRecords = medicalrecordrepository.readMedicalRecord();
+
   Service service = Service(patients: patients, appointments: appointments, medicalRecords: medicalRecords);
   Console console =  Console(service: service);
-try {
-  console.startSystem();
-} finally {
-  patientrepository.writePatients(patients);
-  appointmentrepository.writeAppointments(appointments);
-  medicalrecordrepository.writeMedicalRecords(medicalRecords);
-}
+  
+  try {
+    console.startSystem();
+  } finally {
+    patientrepository.writePatients(patients);
+    appointmentrepository.writeAppointments(appointments);
+    medicalrecordrepository.writeMedicalRecords(medicalRecords);
+  }
 
 }

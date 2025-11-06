@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../domain/Appointment.dart';
+import '../../domain/Models/appointment.dart';
 import 'dart:io';
 
 class AppointmentRepository {

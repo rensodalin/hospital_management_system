@@ -1,5 +1,5 @@
 import 'dart:convert';
-import '../domain/MedicalRecord.dart';
+import '../../domain//Models/MedicalRecord.dart';
 import 'dart:io';
 
 class MedicalRecordRepository {
