@@ -27,17 +27,6 @@
         "A003"
       ],
       "registrationDate": "2025-11-05T21:14:28.500762"
-    },
-    {
-      "id": "P003",
-      "name": "Testing",
-      "age": 12,
-      "gender": "Male",
-      "phone": "123",
-      "address": "PP",
-      "bloodGroup": "O",
-      "appointments": [],
-      "registrationDate": "2025-11-05T22:15:47.619939"
     }
   ]
 }

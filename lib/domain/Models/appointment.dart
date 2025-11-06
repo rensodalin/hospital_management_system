@@ -1,5 +1,5 @@
 class Appointment {
-  String id;
+  final String id;
   String medicalRecordId;
   DateTime schedule;
   String reason;

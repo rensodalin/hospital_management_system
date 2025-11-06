@@ -3,9 +3,9 @@ import './Models/appointment.dart';
 import './Models/MedicalRecord.dart';
 
 class Service {
-  List<Patient> patients;
-  List<Appointment> appointments;
-  List<MedicalRecord> medicalRecords;
+  final List<Patient> patients;
+  final List<Appointment> appointments;
+  final List<MedicalRecord> medicalRecords;
 
   Service({required this.patients, required this.appointments, required this.medicalRecords});
   bool isAppointmentExists(String id) {
