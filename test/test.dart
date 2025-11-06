@@ -38,6 +38,7 @@ main() {
   test('Test create patient duplicate ID', () {
     Patient patient = Patient(id: 'P001',name: 'Leng Menghan',age: 20,gender: 'male',phone: '1234567890',address: '123 Main St',bloodGroup: 'A+', registrationDate: DateTime.now(),);
     expect(() => service.addPatient(patient), throwsException);
+    expect(service.patients.length, equals(2));
   });
 // Case: 2
   test('Test remove patient', () {
@@ -49,6 +50,9 @@ main() {
 
   test('Test remove patient with not existing ID', () {
     expect(() => service.removePatient("P004"), throwsException);
+    expect(service.patients.length, equals(2));
+    expect(service.appointments.length, equals(3));
+    expect(service.medicalRecords.length, equals(3));
   });
 
 // Case:3
