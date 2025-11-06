@@ -22,6 +22,8 @@ class Service {
 
 // MedicalRecord
   void createMedicalRecord(String appointmentId, MedicalRecord newMedicalRecord) {
+    if(!isAppointmentExists(appointmentId)) throw Exception("Appointment with this id: ${appointmentId} does not exist");
+    if(isMedicalRecordExists(newMedicalRecord.id)) throw Exception("MedicalRecord with this id: ${newMedicalRecord.id} already exist");
     medicalRecords.add(newMedicalRecord);
 
     Appointment a = appointments.firstWhere((a) => a.id == appointmentId);
@@ -30,6 +32,7 @@ class Service {
   }
 
   void updateMedicalRecord(String id, String diagnosis, String prescription, String notes) {
+    if(!isMedicalRecordExists(id)) throw Exception("MedicalRecord with this id: ${id} does not exist");
     MedicalRecord m = medicalRecords.firstWhere((m) => m.id == id);
     m.diagnosis = diagnosis;
     m.prescriptions = prescription;
@@ -37,14 +40,19 @@ class Service {
   }
 
   void removeMedicalRecord(String id){
+    if(!isMedicalRecordExists(id)) throw Exception("MedicalRecord with this id: ${id} does not exist");
     MedicalRecord m = medicalRecords.firstWhere((m) => m.id == id);
     appointments.firstWhere((a) => a.medicalRecordId == id).medicalRecordId = '';
     medicalRecords.remove(m);
   }
 
-  MedicalRecord searchMedicalRecord(String id) => medicalRecords.firstWhere((m) => m.id == id);
+  MedicalRecord searchMedicalRecord(String id) {
+    if(!isMedicalRecordExists(id)) throw Exception("MedicalRecord with this id: ${id} does not exist");
+    return medicalRecords.firstWhere((m) => m.id == id);
+  }
 
   List<MedicalRecord> getMedicalRecordsByPatient(String patientId) {
+    if(!isPatientExists(patientId)) throw Exception("Patient with this id: ${patientId} does not exist");
     List<Appointment> as = getAppointmentsByPatient(patientId);
     List<String> mId = [];
     for(Appointment a in as){
@@ -60,16 +68,19 @@ class Service {
 
 // Appointment
   void createAppointment(String patientId, Appointment newAppointment) {
+    if(!isPatientExists(patientId)) throw Exception("Patient with this id: ${patientId} does not exist");
+    if(isAppointmentExists(newAppointment.id)) throw Exception("Appointment with this id: ${newAppointment.id} already exist");
     appointments.add(newAppointment);
-
     patients.firstWhere((p) => p.id == patientId).appointments.add(newAppointment.id);
   }
 
   void updateAppointmentSchedule(String id, DateTime newDate) {
+    if(!isAppointmentExists(id)) throw Exception("Appointment with this id: ${id} does not exist");
     appointments.firstWhere((a) => a.id == id).schedule = newDate;
   }
 
   void removeAppointment(String id){
+    if(!isAppointmentExists(id)) throw Exception("Appointment with this id: ${id} does not exist");
     Appointment a = appointments.firstWhere((a) => a.id == id);
     MedicalRecord m = medicalRecords.firstWhere((m) => m.id == a.medicalRecordId);
     medicalRecords.remove(m);
@@ -77,6 +88,7 @@ class Service {
   }
 
   List<Appointment> getAppointmentsByPatient(String patientId) {
+    if(!isPatientExists(patientId)) throw Exception("Patient with this id: ${patientId} does not exist");
     List<String> appointmentIds = patients.firstWhere((p) => p.id == patientId).appointments;
     List<Appointment> result = [];
     for(Appointment a in appointments){
@@ -93,18 +105,25 @@ class Service {
     return appointments.where((a) => a.schedule.toIso8601String().contains(date)).toList();
   }
 
-  Appointment searchAppointment(String id) => appointments.firstWhere((a) => a.id == id);
-
+  Appointment searchAppointment(String id) {
+    if(!isAppointmentExists(id)) throw Exception("Appointment with this id: ${id} does not exist");
+    return appointments.firstWhere((a) => a.id == id);
+  }
 
 
 // Patient
-  Patient searchPatient(String id) => patients.firstWhere((p) => p.id == id);
+  Patient searchPatient(String id) {
+    if(!isPatientExists(id)) throw Exception("Patient with this id: ${id} does not exist");
+    return patients.firstWhere((p) => p.id == id);
+  }
 
   void addPatient(Patient newPatient) {
+    if(isPatientExists(newPatient.id)) throw Exception("Patient with this id: ${newPatient.id} already exist");
     patients.add(newPatient);
   }
 
   void removePatient(String id) {
+    if(!isPatientExists(id)) throw Exception("Patient with this id: ${id} does not exist");
     Patient p = patients.firstWhere((p) => p.id == id);
     List<String> appointmentsIds = p.appointments;
     for(String id in appointmentsIds){
@@ -115,6 +134,7 @@ class Service {
   }
 
   void updatePatient(String id, String name, int age, String gender, String phone, String address, String bloodGroup) {
+    if(!isPatientExists(id)) throw Exception("Patient with this id: ${id} does not exist");
     Patient p = patients.firstWhere((p) => p.id == id);
     p.name = name;
     p.age = age;
